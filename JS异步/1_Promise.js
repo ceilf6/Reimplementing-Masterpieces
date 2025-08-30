@@ -160,7 +160,7 @@ class myPromise{
                 value.then(resolve, reject); // 等待其状态改变
             });
         }
-        // 否则直接返回一个新的 Promise 实例，状态为 fulfilled
+        // 否则直接返回一个新的 Promise 实例，状态为 fulfilled，传入 value 调用回调函数
         return new myPromise(resolve => resolve(value));
     }
 
