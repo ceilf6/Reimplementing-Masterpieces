@@ -1,4 +1,62 @@
-
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+  }
+  
+  async function main() {
+    console.log('T1')
+    const promise1 = new Promise((resolve, reject) => {
+      console.log('1')
+      setTimeout(() => {
+        resolve('success')
+      }, 1000)
+      console.log('2')
+    })
+    const promise2 = promise1.then(() => {
+      throw new Error('error!!!')
+    }).catch(err => {
+      console.log('捕获到错误:', err.message)
+    })
+  
+    console.log('promise1', promise1)
+    console.log('promise2', promise2)
+  
+    await sleep(2000)
+    console.log('promise1', promise1)
+    console.log('promise2', promise2)
+  
+    // ========= T2 =========
+    console.log('\nT2')
+    const promise = new Promise((resolve, reject) => {
+      setTimeout(() => {
+        console.log('once')
+        resolve('success')
+      }, 1000)
+    })
+    const start = Date.now()
+    promise.then((res) => {
+      console.log(res, Date.now() - start)
+    })
+    promise.then((res) => {
+      console.log(res, Date.now() - start)
+    })
+  
+    await sleep(1500)
+  
+    // ========= T3 =========
+    console.log('\nT3')
+    await Promise.resolve()
+      .then(() => {
+        return new Error('error!!!')
+      })
+      .then((res) => {
+        console.log('then: ', res)
+      })
+      .catch((err) => {
+        console.log('catch: ', err)
+      })
+  }
+  
+  main()
 /*
 console.log('T1')
 const promise1 = new Promise((resolve, reject) => {
