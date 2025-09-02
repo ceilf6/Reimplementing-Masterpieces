@@ -1,39 +1,29 @@
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+// start ============================
 process.nextTick(() => {
     console.log('nextTick')
-  })
-  Promise.resolve()
+})
+Promise.resolve()
     .then(() => {
-      console.log('then')
+        console.log('then')
     })
-  setImmediate(() => {
-    console.log('setImmediate')
-  })
-  console.log('end')
-
-
-  function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms))
-  }
-
-async function main(){
+// start ============================
+async function main() {
     await sleep(3000)
+    console.log()
 
-    await Promise.resolve().then(() => {
-            console.log()
-        }
-    )
-
+// end ============================
     process.nextTick(() => {
         console.log('nextTick')
-      })
-      Promise.resolve()
+    })
+    Promise.resolve()
         .then(() => {
-          console.log('then')
+            console.log('then')
         })
-      setImmediate(() => {
-        console.log('setImmediate')
-      })
-      console.log('end')
+// end ============================
 }
 
 main()
