@@ -8,7 +8,7 @@ import { useState } from 'react';
 
 function Square({value, onClick}) {
   // const [value,setValue] = useState(initValue);
-  /*
+  /* 向上了
   function handleClick() {
     if(value === '') setValue('X');
   }
@@ -19,19 +19,34 @@ function Square({value, onClick}) {
   )
 }
 
-export default function Board() { // 向外暴露 默认主函数
+//export default function Board() { // 向外暴露 默认主函数
+function Board() {
   const [squares,setSquares] = useState(Array(9).fill(null));
+  const [xIsNext,setXIsNext] = useState(true); // 追踪当前操作者
 
   function handleClick(i) {
-    const nextSquares = squares.slice(); // 需要创建副本，如果直接修改原数组，会导致数组的标志-引用指针不变，而React是用Object.is浅比较导致无法触发更新
-    nextSquares[i] = 'X';
+    const nextSquares = squares.slice(); // 需要创建副本，如果直接修改原数组，会导致数组的标志-引用指针不变，而React在memo这个API里面是用Object.is浅比较导致无法触发更新
+      // 而且不直接在原来基础上覆盖进行变化，能方便后面对之前的状态进行回溯
+    if (nextSquares[i]) return; // 如果该位置已经有值，则不进行操作
+    if (xIsNext) nextSquares[i] = 'X';
+    else nextSquares[i] = 'O';
+    setXIsNext(!xIsNext); // 置反
     setSquares(nextSquares);
+  }
+
+  // const winner = calculateWinner(squares); // 随着state更新会多次调用
+  if (calculateWinner(squares)){
+    const winner = xIsNext ? 'O' : 'X';
+    alert(`Winner: ${winner}`);
   }
 
   return (
     <>
       <div className="board-row">
-        <Square value={squares[0]} onClick={() => handleClick(0)}/> {/* 得套一层箭头函数用回调，因为如果不套的话就直接调用了，相当于传入了handleClick(0)的返回值undefined*/}
+        <Square value={squares[0]} onClick={() => {
+          handleClick(0)
+          //console.log(calculateWinner(squares))
+        }}/> {/* 得套一层箭头函数用回调，因为如果不套的话就直接调用了，相当于传入了handleClick(0)的返回值undefined*/}
         <Square value={squares[1]} onClick={() => handleClick(1)}/>
         <Square value={squares[2]} onClick={() => handleClick(2)}/>
       </div>
@@ -47,4 +62,39 @@ export default function Board() { // 向外暴露 默认主函数
       </div>
     </>
   )
+}
+
+// 如果想要回溯的话就需要cache状态，但是在 Board 里面设置的话就会导致更新，所以还需要套一层
+export default function Game() {
+
+  return (
+    <div className="game">
+      <div className="game-board">
+        <Board />
+      </div>
+      <div className="game-info">
+        <ol>{/*TODO*/}</ol>
+      </div>
+    </div>
+  );
+}
+
+function calculateWinner(squares) {
+  const over = [
+    [0,1,2],
+    [3,4,5],
+    [6,7,8],
+    [0,3,6],
+    [1,4,7],
+    [2,5,8],
+    [0,4,8],
+    [2,4,6],
+  ]
+
+  for (let i of over) {
+    if (squares[i[0]] && squares[i[0]] === squares[i[1]] && squares[i[1]] === squares[i[2]]) {
+      return true;
+    }
+  }
+  return false;
 }
