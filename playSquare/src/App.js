@@ -20,8 +20,8 @@ function Square({value, onClick}) {
 }
 
 //export default function Board() { // 向外暴露 默认主函数
-function Board() {
-  const [squares,setSquares] = useState(Array(9).fill(null));
+function Board({squares,setCache}) {
+  // const [squares,setSquares] = useState(Array(9).fill(null));
   const [xIsNext,setXIsNext] = useState(true); // 追踪当前操作者
 
   function handleClick(i) {
@@ -31,11 +31,11 @@ function Board() {
     if (xIsNext) nextSquares[i] = 'X';
     else nextSquares[i] = 'O';
     setXIsNext(!xIsNext); // 置反
-    setSquares(nextSquares);
+    setCache(prev => [...prev, nextSquares]);
   }
 
   // const winner = calculateWinner(squares); // 随着state更新会多次调用
-  if (calculateWinner(squares)){
+  if (calculateWinner(squares)){ // 注意上面形参的大小写
     const winner = xIsNext ? 'O' : 'X';
     alert(`Winner: ${winner}`);
   }
@@ -66,11 +66,15 @@ function Board() {
 
 // 如果想要回溯的话就需要cache状态，但是在 Board 里面设置的话就会导致更新，所以还需要套一层
 export default function Game() {
+  const [cache,setCache] = useState([Array(9).fill("")]);
+  const now = cache[cache.length - 1]
 
+  console.log(cache);
+  
   return (
     <div className="game">
-      <div className="game-board">
-        <Board />
+      <div className="game-board"> {/* 那么就当目前棋盘变了的时候就会响应，需要作为参数传入，所以得提升*/}
+        <Board squares={now} setCache={setCache} />
       </div>
       <div className="game-info">
         <ol>{/*TODO*/}</ol>
