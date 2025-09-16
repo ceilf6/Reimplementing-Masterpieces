@@ -64,11 +64,35 @@ function Board({squares,setCache}) {
   )
 }
 
+function CacheSpace({cache,handleCache}){
+
+  const items = cache.map((item,index)=>
+    <>
+      <li key = {index}>
+        {item.join('')}
+        <button onClick={() => handleCache(index)}> {/*注意还是传的回调*/}
+          回溯
+        </button>
+      </li>
+    </>
+  )
+
+  return (
+    <ol>
+      {items}
+    </ol>
+  )
+}
+
 // 如果想要回溯的话就需要cache状态，但是在 Board 里面设置的话就会导致更新，所以还需要套一层
 export default function Game() {
   const [cache,setCache] = useState([Array(9).fill("")]);
   const now = cache[cache.length - 1]
 
+  function handleCache(index){ // 在上面调用的时候是直接传 index 的，不需要套一层 {}
+    setCache(prev => prev.slice(0, index + 1));
+  }
+  
   console.log(cache);
   
   return (
@@ -77,7 +101,8 @@ export default function Game() {
         <Board squares={now} setCache={setCache} />
       </div>
       <div className="game-info">
-        <ol>{/*TODO*/}</ol>
+         <CacheSpace cache={cache} handleCache={handleCache}/>
+         {/*<button onClick={handleCache}>回溯</button>*/}
       </div>
     </div>
   );

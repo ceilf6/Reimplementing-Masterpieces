@@ -63,12 +63,12 @@ body {
   font-size: 24px;
   font-weight: bold;
   line-height: 34px;
-  height: 34px;
   margin-right: -1px;
   margin-top: -1px;
   padding: 0;
   text-align: center;
-  width: 34px;
+  height: 200px;
+  width: 200px;
 }
 
 .board-row::after { /* 在square中通过float设为left脱离了文档流，所以需要after通过 :: 伪元素清除浮动，防止高度坍塌*/
