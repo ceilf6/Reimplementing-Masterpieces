@@ -6,6 +6,7 @@ import { useState } from 'react';
 // 所以得在棋盘组件里面设置一个响应式数组，然后通过props将数组传给每个子组件
 // useState 是通过追踪调用 set 函数来触发更新
 
+
 function Square({value, onClick}) {
   // const [value,setValue] = useState(initValue);
   /* 向上了
