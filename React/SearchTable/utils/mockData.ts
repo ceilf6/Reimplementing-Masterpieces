@@ -3,7 +3,7 @@ export interface MockDataItem {
   id: string;
   name: string;
   status: string;
-  createTime: string;
+  createTime: number; // 改为时间戳
   amount: number;
 }
 
@@ -12,7 +12,7 @@ export const generateMockData = (count = 10): MockDataItem[] => {
     id: `item-${index + 1}`,
     name: `项目 ${index + 1}`,
     status: index % 2 === 0 ? '启用' : '禁用',
-    createTime: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    createTime: Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000, // 生成时间戳
     amount: Math.floor(Math.random() * 10000) + 100, // 生成100-10099之间的随机金额
   }));
 };
