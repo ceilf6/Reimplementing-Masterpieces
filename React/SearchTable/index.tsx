@@ -58,6 +58,7 @@ export default function SearchTableBase() {
       };
     },
   });
+  
 
   const formItems = useMemo(() => renderFormItems(), []);
 
