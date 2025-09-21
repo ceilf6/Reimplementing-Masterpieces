@@ -45,6 +45,7 @@ const columns = [
   },
 ];
 
+
 export default function SearchTableBase() {
   const { config } = useSearchTable({
     onSearch: async (params) => {
